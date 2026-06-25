@@ -1,6 +1,17 @@
 #include "http_parser.h"
 #include <cassert>
 #include <iostream>
+#include <cstring>
+
+// 重载 ParseResult 的流输出（用于 ASSERT_EQ 报错）
+inline std::ostream &operator<<(std::ostream &os, HttpParser::ParseResult r) {
+    switch (r) {
+        case HttpParser::ParseResult::kNeedMore: return os << "kNeedMore";
+        case HttpParser::ParseResult::kComplete: return os << "kComplete";
+        case HttpParser::ParseResult::kError:    return os << "kError";
+    }
+    return os << "unknown";
+}
 
 static int tests_run = 0;
 static int tests_passed = 0;
