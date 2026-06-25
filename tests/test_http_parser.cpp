@@ -82,11 +82,11 @@ void test_incremental_parsing() {
     HttpParser parser;
 
     // 第一批：仅发送请求行
-    auto r1 = parser.Parse("GET /api HTTP/1.1\r\n", 18);
+    auto r1 = parser.Parse("GET /api HTTP/1.1\r\n", 19);
     ASSERT_EQ(r1, HttpParser::ParseResult::kNeedMore);
 
     // 第二批：发送 headers
-    auto r2 = parser.Parse("Host: test\r\n\r\n", 16);
+    auto r2 = parser.Parse("Host: test\r\n\r\n", 14);
     ASSERT_EQ(r2, HttpParser::ParseResult::kComplete);
 
     const auto &req = parser.GetRequest();
