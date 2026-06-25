@@ -4,14 +4,26 @@
 
 ## 🏗 架构
 
-```
-主线程 (I/O)                  工作线程池 (4 workers)
-┌──────────────┐          ┌─────────────────────┐
-│ epoll_wait   │──task──▶│ HttpParser::Parse()  │
-│ 事件循环      │          │ Router::Dispatch()   │
-│ accept/read  │          │ HttpResponse::Build  │
-└──────────────┘          │ send() 写回 socket   │
-                          └─────────────────────┘
+```mermaid
+graph TD
+    subgraph "主线程 I/O"
+        A[epoll_wait 事件循环]
+        B[accept 新连接]
+        C[read 读取请求]
+    end
+
+    subgraph "工作线程池"
+        D[HttpParser<br/>状态机增量解析]
+        E[Router<br/>正则匹配分发]
+        F[HttpResponse<br/>Builder 构造响应]
+        G[send 写回 socket]
+    end
+
+    A -->|新连接| B
+    A -->|可读事件| C
+    C -->|Submit task| D
+    D --> E --> F --> G
+    D -->|EPOLLONESHOT<br/>重新挂载| A
 ```
 
 | 组件 | 职责 | 设计模式 |
