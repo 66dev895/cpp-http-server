@@ -36,6 +36,7 @@ static int tests_passed = 0;
 
 // ============================================================
 void test_simple_get() {
+    tests_run++;
     HttpParser parser;
     const char *raw =
         "GET /index.html HTTP/1.1\r\n"
@@ -58,6 +59,7 @@ void test_simple_get() {
 
 // ============================================================
 void test_post_with_body() {
+    tests_run++;
     HttpParser parser;
     std::string raw =
         "POST /api/data HTTP/1.1\r\n"
@@ -79,6 +81,7 @@ void test_post_with_body() {
 
 // ============================================================
 void test_incremental_parsing() {
+    tests_run++;
     HttpParser parser;
 
     // 第一批：仅发送请求行
@@ -100,6 +103,7 @@ void test_incremental_parsing() {
 
 // ============================================================
 void test_reset() {
+    tests_run++;
     HttpParser parser;
 
     auto r1 = parser.Parse("GET /first HTTP/1.1\r\nHost: a\r\n\r\n", 40);
